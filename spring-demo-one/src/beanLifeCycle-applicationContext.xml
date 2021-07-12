@@ -24,10 +24,15 @@
     	class="com.pkonez.springdemo.TrackCoach" 
     	init-method="doMyStartupStuff"
     	destroy-method="doMyCleanupStuffYoyo"
-    	scope="singleton">
+    	scope="prototype">
     	<!-- set up constructor injection -->
     	<constructor-arg ref="myFortuneService"/>
     </bean>
+    
+    <!-- Bean custom processor to handle calling destroy methods on prototype scoped beans -->
+       <bean id="customProcessor"
+    		class="com.pkonez.springdemo.MyCustomBeanProcessor">
+   	</bean>
     
     
     
