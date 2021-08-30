@@ -4,36 +4,43 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import com.pkonez.hibernate.demo.entity.Instructor;
+import com.pkonez.hibernate.demo.entity.InstructorDetail;
 import com.pkonez.hibernate.demo.entity.Student;
 
-public class PrimaryKeyDemo {
+public class DeleteDemo {
 
 	public static void main(String[] args) {
 		
 		// create session factory
 		SessionFactory factory = new Configuration()
 				.configure("hibernate.cfg.xml")
-				.addAnnotatedClass(Student.class)
+				.addAnnotatedClass(Instructor.class)
+				.addAnnotatedClass(InstructorDetail.class)
 				.buildSessionFactory();
 		
 		// create session
 		Session session = factory.getCurrentSession();
 		
 		try {			
-			// create 3 student objects
-			System.out.println("Create 3 student objects...");
-			Student tempStudent1 = new Student("John", "Doe", "john@luv2code.com", null);
-			Student tempStudent2 = new Student("Mary", "Public", "mary@luv2code.com", null);
-			Student tempStudent3 = new Student("Bonita", "Applebum", "bonita@luv2code.com", null);
 			
 			// start a transaction
 			session.beginTransaction();
 			
-			// save the student object
-			System.out.println("Saving the students...");
-			session.save(tempStudent1);
-			session.save(tempStudent2);
-			session.save(tempStudent3);
+			// get instructor by primary key / id
+			int theId = 1;
+			Instructor tempInstructor = session.get(Instructor.class, theId);
+			
+			System.out.println("Found instructor: " + tempInstructor);
+			
+			// delete the instructors
+			if(tempInstructor != null) {
+				System.out.println("Deleting: " + tempInstructor);
+				
+				// Note: will ALSO delete associated "details" object
+				//because of CascadeType.ALL
+				session.delete(tempInstructor);
+			}
 			
 			// commit transaction
 			session.getTransaction().commit();
@@ -43,6 +50,7 @@ public class PrimaryKeyDemo {
 		}finally {
 			factory.close();
 		}
+		
 
 	}
 

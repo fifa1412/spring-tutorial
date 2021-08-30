@@ -4,36 +4,37 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import com.pkonez.hibernate.demo.entity.Student;
+import com.pkonez.hibernate.demo.entity.Course;
+import com.pkonez.hibernate.demo.entity.Instructor;
+import com.pkonez.hibernate.demo.entity.InstructorDetail;
 
-public class PrimaryKeyDemo {
+public class DeleteCourseDemo {
 
 	public static void main(String[] args) {
 		
 		// create session factory
 		SessionFactory factory = new Configuration()
 				.configure("hibernate.cfg.xml")
-				.addAnnotatedClass(Student.class)
+				.addAnnotatedClass(Instructor.class)
+				.addAnnotatedClass(InstructorDetail.class)
+				.addAnnotatedClass(Course.class)
 				.buildSessionFactory();
 		
 		// create session
 		Session session = factory.getCurrentSession();
 		
 		try {			
-			// create 3 student objects
-			System.out.println("Create 3 student objects...");
-			Student tempStudent1 = new Student("John", "Doe", "john@luv2code.com", null);
-			Student tempStudent2 = new Student("Mary", "Public", "mary@luv2code.com", null);
-			Student tempStudent3 = new Student("Bonita", "Applebum", "bonita@luv2code.com", null);
 			
 			// start a transaction
 			session.beginTransaction();
 			
-			// save the student object
-			System.out.println("Saving the students...");
-			session.save(tempStudent1);
-			session.save(tempStudent2);
-			session.save(tempStudent3);
+			// get a course
+			int theId = 10;
+			Course tempCourse = session.get(Course.class, theId);
+			
+			// delete course
+			System.out.println("Deleting course: " + tempCourse);
+			session.delete(tempCourse);
 			
 			// commit transaction
 			session.getTransaction().commit();
@@ -41,8 +42,12 @@ public class PrimaryKeyDemo {
 			System.out.println("Done!");
 			
 		}finally {
+			
+			// add clean up code
+			session.close();
 			factory.close();
 		}
+		
 
 	}
 

@@ -1,44 +1,39 @@
 package com.pkonez.hibernate.demo;
 
-import java.text.ParseException;
-import java.util.Date;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import com.pkonez.hibernate.demo.entity.Employee;
 import com.pkonez.hibernate.demo.entity.Student;
 
-public class CreateStudentDemo {
+public class ReadEmployeeDemo {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) {
 		
 		// create session factory
 		SessionFactory factory = new Configuration()
 				.configure("hibernate.cfg.xml")
-				.addAnnotatedClass(Student.class)
+				.addAnnotatedClass(Employee.class)
 				.buildSessionFactory();
 		
 		// create session
 		Session session = factory.getCurrentSession();
 		
 		try {			
-			// create a student object
-			System.out.println("Create new student object...");
 			
-			String theDateOfBirthStr = "31/12/1998";
-            Date theDateOfBirth = DateUtils.parseDate(theDateOfBirthStr);
-            
-            
-			Student tempStudent = new Student("Paul", "Wall", "paul@luv2code.com", theDateOfBirth);
+			int employeeId = 1;
 			
 			// start a transaction
 			session.beginTransaction();
 			
-			// save the student object
-			System.out.println("Saving the student...");
-			session.save(tempStudent);
+			// retrieve employee based on the id: primary key
+			System.out.println("\nGetting employee with id: " + employeeId);
+			Employee myEmployee = session.get(Employee.class, employeeId);
 			
+			// display the employee object
+			System.out.println("Employee: " + myEmployee);
+
 			// commit transaction
 			session.getTransaction().commit();
 			
@@ -47,7 +42,6 @@ public class CreateStudentDemo {
 		}finally {
 			factory.close();
 		}
-		
 
 	}
 
